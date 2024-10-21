@@ -3,10 +3,13 @@
 public class PersonId
 {
     private readonly string _id;
+    DateTime data = System.DateTime.Today;
+    int bornYear;
 
     public PersonId(string Id)
     {
         _id = Id;
+
     }
     /// <summary>
     /// Get full year from PESEL
@@ -14,15 +17,32 @@ public class PersonId
     /// <returns></returns>
     public int GetYear()
     {
-        return 0;
-    }
 
+        int century = 20;
+        string id = _id;
+        if (int.Parse(id.Substring(2, 2)) <= 12)
+        {
+            century = 19;
+        }
+        bornYear = int.Parse(century + id.Substring(0, 2));
+        return bornYear;
+    }
     /// <summary>
     /// Get month from PESEL
     /// </summary>
     public int GetMonth()
     {
-        return 0;
+        string monthPart = _id.Substring(2, 2);
+        int monthInt = int.Parse(monthPart);
+
+
+        int year = GetYear();
+        if (year >= 2000)
+        {
+            monthInt -= 20;
+        }
+
+        return monthInt;
     }
 
     /// <summary>
@@ -31,7 +51,11 @@ public class PersonId
     /// <returns></returns>
     public int GetDay()
     {
-        return 0;
+        string id = _id;
+        string result = id.Substring(startIndex: 4, length: 2);
+        int resultInt = int.Parse(result);
+
+        return resultInt;
     }
 
     /// <summary>
@@ -40,9 +64,10 @@ public class PersonId
     /// <returns></returns>
     public int GetAge()
     {
-        return 0;
-    }
+        int currentYear = data.Year;
+        return currentYear - bornYear;
 
+    }
     /// <summary>
     /// Get gender from PESEL
     /// </summary>
@@ -50,7 +75,8 @@ public class PersonId
     /// <returns>f</returns>
     public string GetGender()
     {
-        return "";
+        int genderDigit = int.Parse(_id.Substring(9, 1));
+        return genderDigit % 2 == 0 ? "k" : "m";
     }
 
     /// <summary>
